@@ -235,6 +235,11 @@ namespace EFFluentAPI
 
             Console.WriteLine("\n");
 
+            foreach(var x in ExtGroupJoinQuery2)
+                Console.WriteLine("{0}\t{1}", x.Author, x.Course.Count());
+
+            Console.WriteLine("\n");
+
             //Cross Join
             var ExtCrossJoinQuery = Context.Authors.SelectMany(a => Context.Courses, (author, course) => new
             {
@@ -244,7 +249,28 @@ namespace EFFluentAPI
             foreach(var x in ExtCrossJoinQuery)
                 Console.WriteLine("{0}\t{1}", x.AuthorName, x.CourseName);
 
-            Console.ReadKey();
+            Console.WriteLine("\n\n\n");
+
+            //Partitioning or Paging
+            var ExtPartioningQuery = Context.Courses.OrderBy(c=>c.Name).Skip(3).Take(3);
+            foreach(var x in ExtPartioningQuery)
+                Console.WriteLine(x.Name);
+
+            Console.WriteLine("\n\n\n");
+
+            //Element Operators
+            //Fetch one object instead of a collection
+            Console.WriteLine(Context.Authors.FirstOrDefault().Name);
+
+            Console.WriteLine("\n\n\n");
+            //Quantifying
+            //--Pending
+
+            //Aggregating
+            Console.WriteLine(Context.Courses.Count());
+            Console.WriteLine(Context.Courses.Max(c => c.FullPrice));
+            Console.WriteLine(Context.Courses.Min(c => c.FullPrice));
+            Console.WriteLine(Context.Courses.Average(c => c.FullPrice));
         }
     }
 }
