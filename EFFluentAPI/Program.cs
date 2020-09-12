@@ -125,6 +125,125 @@ namespace EFFluentAPI
             foreach(var c in CrossJoinQuery)
                 Console.WriteLine("{0} - {1}", c.AuthorName, c.CourseName);
 
+            Console.WriteLine("\n\n\n");
+
+            //Extension Method Syntaxes
+            //Restrictions
+            var ExtRestrictionQuery = Context.Courses.Where(c => c.Level == (CourseLevel)1);
+            foreach(var x in ExtRestrictionQuery)
+                Console.WriteLine("{0}\t{1}\t{2}\t{3}", x.Name, x.AuthorID, x.Level, x.FullPrice);
+
+            Console.WriteLine("\n\n\n");
+
+            //Ordering
+            var ExtOrderingQuery = Context.Courses
+                                   .Where(c => c.Level == (CourseLevel)2)
+                                   .OrderBy(c => c.Level)
+                                   .ThenByDescending(c => c.Name);
+            foreach(var x in ExtOrderingQuery)
+                Console.WriteLine("{0}\t{1}", x.Level, x.Name);
+
+            Console.WriteLine("\n\n\n");
+
+            //Projection
+            var ExtProjectionQuery = Context.Courses
+                                    .Where(c => c.Level == CourseLevel.Beginner)
+                                    .Select(c => new { CourseName = c.Name, AuthorName = c.Author.Name });
+            foreach(var x in ExtProjectionQuery)
+                Console.WriteLine("{0}\t{1}", x.AuthorName, x.CourseName);
+
+            Console.WriteLine("\n");
+
+            var ExtProjectionQuery2 = Context.Courses
+                                        .Where(c=>c.Level == CourseLevel.Intermediate)
+                                      //.Where(c => c.Level == CourseLevel.Beginner && c.Name == "c#" || c.AuthorID == 2)
+                                      .Select(c => c.Tags);
+            foreach (var x in ExtProjectionQuery2)
+            {
+                foreach(var y in x)
+                    Console.WriteLine(y.Name);
+            }
+
+            Console.WriteLine("\n");
+
+            var ExtProjectionQuery3 = Context.Courses
+                                        .SelectMany(c => c.Tags)
+                                        .Distinct();//Set Operator
+            foreach(var x in ExtProjectionQuery3)
+                Console.WriteLine(x.Name);
+
+            Console.WriteLine("\n\n\n");
+
+            //Grouping
+            var ExtGroupingQuery = Context.Courses.GroupBy(c => c.Level);
+            foreach(var x in ExtGroupingQuery)
+            {
+                Console.WriteLine("Level - {0}", x.Key);
+                foreach(var y in x)
+                    Console.WriteLine("\t{0}\t{1}", y.FullPrice, y.Name);
+            }
+
+            Console.WriteLine("\n\n\n");
+
+            //Joins
+            //Inner Join
+            var ExtInnerJoinQuery = Context.Courses
+                                    .Join(Context.Authors,
+                                    c => c.AuthorID,
+                                    a => a.ID,
+                                    (course, author) => new
+                                    {
+                                        CourseName = course.Name,
+                                        AuthorName = author.Name
+                                    });
+            foreach(var x in ExtInnerJoinQuery)
+                Console.WriteLine("{0}\t\t\t\t\t{1}", x.CourseName, x.AuthorName);
+
+            Console.WriteLine("\n");
+
+            //Group Join
+            var ExtGroupJoinQuery = Context.Authors
+                                    .GroupJoin(Context.Courses,
+                                    a => a.ID,
+                                    c => c.AuthorID,
+                                    (author, course) => new
+                                    {
+                                        AuthorName = author.Name,
+                                        Courses = course.Count()
+                                    });
+            foreach(var x in ExtGroupJoinQuery)
+                Console.WriteLine("{0}\t{1}", x.AuthorName, x.Courses);
+
+            Console.WriteLine("\n");
+
+            var ExtGroupJoinQuery2 = Context.Authors
+                                        .GroupJoin(Context.Courses,
+                                        a => a.ID,
+                                        c => c.AuthorID,
+                                        (author, course) => new
+                                        {
+                                            Author = author.Name,
+                                            Course = course
+                                        });
+            foreach(var f in ExtGroupJoinQuery2)
+            {
+                Console.WriteLine("Author : {0}", f.Author);
+
+                foreach(var g in f.Course)
+                    Console.WriteLine("\t{0}", g.Name);
+            }
+
+            Console.WriteLine("\n");
+
+            //Cross Join
+            var ExtCrossJoinQuery = Context.Authors.SelectMany(a => Context.Courses, (author, course) => new
+            {
+                AuthorName = author.Name,
+                CourseName = course.Name
+            });
+            foreach(var x in ExtCrossJoinQuery)
+                Console.WriteLine("{0}\t{1}", x.AuthorName, x.CourseName);
+
             Console.ReadKey();
         }
     }
