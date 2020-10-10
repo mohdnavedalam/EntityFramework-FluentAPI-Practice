@@ -6,7 +6,11 @@ namespace EFFluentAPI.Model
 {
     public class FluentAPIContext : DbContext
     {
-        public FluentAPIContext() : base("name=FluentAPIContext") { }
+        public FluentAPIContext() : base("name=FluentAPIContext")
+        {
+            //Disable Lazy Loading
+            this.Configuration.LazyLoadingEnabled = false;
+        }
 
         public DbSet<Course> Courses { get; set; }
         public DbSet<Tag> Tags { get; set; }

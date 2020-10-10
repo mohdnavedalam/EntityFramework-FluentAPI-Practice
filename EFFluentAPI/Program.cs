@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -271,6 +272,38 @@ namespace EFFluentAPI
             Console.WriteLine(Context.Courses.Max(c => c.FullPrice));
             Console.WriteLine(Context.Courses.Min(c => c.FullPrice));
             Console.WriteLine(Context.Courses.Average(c => c.FullPrice));
+
+            Console.WriteLine("\n\n\n");
+
+            //Eager Loading           
+            //var EagerLoadQuery = Context.Courses.Include("Author").ToList(); 
+            //Not best practice due to the string in Include Method.
+
+            var EagerLoadQuery = Context.Courses.Include(c => c.Author).ToList();
+            //Best practice since the string in the Include() method could be changed from the origin class.
+
+            foreach(var x in EagerLoadQuery)
+                Console.WriteLine("{0}\t{1}", x.Author.Name, x.Name);
+
+            Console.WriteLine("\n\n\n");
+
+            //Explicit Loading            
+            //var author = Context.Authors.Single(a => a.ID == 1);
+
+            //MSDN Way
+            //Context.Entry(author).Collection(a => a.Courses).Query().Where(c => c.FullPrice == 0).Load();
+
+            //Mosh Way
+            //Context.Courses.Where(c => c.AuthorID == author.ID && c.FullPrice == 0).Load();
+
+            //Mosh Way for collections or multiple values
+            //var author = Context.Authors.ToList();
+            //var authorIDs = author.Select(a => a.ID);
+
+            //Context.Courses.Where(c => authorIDs.Contains(c.AuthorID) && c.FullPrice == 0);
+
+
+
         }
     }
 }
