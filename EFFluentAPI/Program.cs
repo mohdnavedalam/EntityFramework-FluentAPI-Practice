@@ -302,8 +302,55 @@ namespace EFFluentAPI
 
             //Context.Courses.Where(c => authorIDs.Contains(c.AuthorID) && c.FullPrice == 0);
 
+            //---------------------------------------------------------------------------------------------//
+            //---------------------------------------------------------------------------------------------//
+            //The code is commented for better understanding.
+            //Section - 8 : Updating Data
+            //Adding new data
+            //Windows Applications approach
+            var dbContext = new FluentAPIContext();
+            //var authors = dbContext.Authors.ToList();
+            //var author1 = authors.Single(a => a.ID == 1);
 
+            //var course1 = new Course
+            //{
+            //    Name = "New Course",
+            //    Description = "New Description",
+            //    FullPrice = 19.95f,
+            //    Level = (CourseLevel)1,
+            //    //Author = new Author { ID = 1, Name = "Mosh Hamedani"},
+            //    //the above line will add a new row in Authors table with the same name, which is an issue
 
+            //    Author = author1
+
+            //    //Web Applications approach
+            //    //AuthorID = 1
+            //};
+            //dbContext.Courses.Add(course1);
+            //dbContext.SaveChanges();
+
+            //Updating data
+            //var courseUpdate = dbContext.Courses.Find(11); //.Single(a => a.ID == 11);
+            //courseUpdate.Name = "New Course 2";
+            //courseUpdate.Description = "New Description";
+            //courseUpdate.AuthorID = 2;
+            //dbContext.SaveChanges();
+
+            //Removing Data
+            //With Cascade delete
+            //var coursesDelete = dbContext.Courses.Single(c => c.ID == 13);
+            //dbContext.Courses.Remove(coursesDelete);
+            //dbContext.SaveChanges();
+
+            //Without Cascade Delete
+            //var authorDelete = dbContext.Authors.Find(2);
+            //var authorDelete = dbContext.Authors.Include(a => a.Courses).Single(a => a.ID == 2);
+            //dbContext.Courses.RemoveRange(authorDelete.Courses);
+            //dbContext.Authors.Remove(authorDelete);
+            //dbContext.SaveChanges();
+
+            //Change Tracker
+            //Study
         }
     }
 }
