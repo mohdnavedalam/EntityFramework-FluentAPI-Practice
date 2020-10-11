@@ -351,6 +351,9 @@ namespace EFFluentAPI
 
             //Change Tracker
             //Study
+
+            //LinqPad
+            //Study
         }
     }
 }
